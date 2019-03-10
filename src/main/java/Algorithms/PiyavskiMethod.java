@@ -98,9 +98,11 @@ public class PiyavskiMethod implements Algorithm {
     public void makeTwoIntervals(int index) {
         double point = 0.5*(intervals.get(index).getRight()+intervals.get(index).getLeft())-
                 (function(intervals.get(index).getRight())-function(intervals.get(index).getLeft()))/(2*m);
+        //System.out.println(point);
         if(point<intervals.get(index).getLeft()||point>intervals.get(index).getRight()){
             point = intervals.get(index).getMiddle();
         }
+
         Interval first = new Interval(intervals.get(index).getLeft(), point);
 
         Interval tmp = new Interval(minValue, function(point));
@@ -117,6 +119,10 @@ public class PiyavskiMethod implements Algorithm {
 
     public void makeNewIntervals() {
         int index = characteristics.indexOf(Collections.max(characteristics));
+//        for(int i = 0; i<characteristics.size();i++){
+//            System.out.println(intervals.get(i).getLeft() + ", " + intervals.get(i).getRight() + ": " + characteristics.get(i));
+//        }
+//        System.out.println("Index: " + index);
         makeTwoIntervals(index);
     }
 
