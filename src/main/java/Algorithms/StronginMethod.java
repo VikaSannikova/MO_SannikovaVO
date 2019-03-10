@@ -120,6 +120,9 @@ public class StronginMethod implements Algorithm{
     public void makeTwoIntervals (int index){
         double point = 0.5*(intervals.get(index).getRight()+intervals.get(index).getLeft())-
                 (function(intervals.get(index).getRight())-function(intervals.get(index).getLeft()))/(2*m);
+        if(point<intervals.get(index).getLeft()||point>intervals.get(index).getRight()){
+            point = intervals.get(index).getMiddle();
+        }
         Interval first = new Interval(intervals.get(index).getLeft(), point);
         Interval second = new Interval(first.getRight(), intervals.get(index).getRight());
 
