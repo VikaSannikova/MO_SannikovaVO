@@ -16,6 +16,7 @@ public class StronginMethod implements Algorithm{
     ArrayList<Interval> intervals = new ArrayList<Interval>();
     ArrayList<Double> characteristics = new ArrayList<Double>();
     ArrayList<Double> lengths = new ArrayList<Double>();
+    double minValue;
     Expression function;
 
     double M;
@@ -68,7 +69,11 @@ public class StronginMethod implements Algorithm{
         return intervals.get(index);
     }
 
-    public StronginMethod(double r,Interval interval, Expression expression) {
+    public double getMinValue() {
+        return minValue;
+    }
+
+    public StronginMethod(double r, Interval interval, Expression expression) {
         setFunction(expression);
         this.intervals.add(interval);
         ArrayList<Double> max = new ArrayList<Double>();
@@ -80,6 +85,8 @@ public class StronginMethod implements Algorithm{
                 pow(function(interval.getRight())-function(interval.getLeft()),2)/(m*(interval.getRight()-interval.getLeft()))-
                 2*(function(interval.getRight())+function(interval.getLeft())));
         this.lengths.add(interval.getLength());
+        Interval tmp = new Interval(function(interval.getLeft()),function(interval.getRight()));
+        minValue = tmp.min();
     }
 
     public void sort(){
@@ -115,6 +122,10 @@ public class StronginMethod implements Algorithm{
                 (function(intervals.get(index).getRight())-function(intervals.get(index).getLeft()))/(2*m);
         Interval first = new Interval(intervals.get(index).getLeft(), point);
         Interval second = new Interval(first.getRight(), intervals.get(index).getRight());
+
+        Interval tmp = new Interval(minValue, function(point));
+        minValue = tmp.min();
+
         intervals.get(index).setRange(first.getLeft(), first.getRight());
         intervals.add(second);
         sort();

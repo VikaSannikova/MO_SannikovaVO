@@ -39,4 +39,8 @@ public class Interval {
     public Double getMiddle(){
         return 0.5*(this.getRight()+this.getLeft());
     }
+
+    public double min(){
+        return (this.getLeft() < this.getRight() ? this.getLeft() : this.getRight());
+    }
 }

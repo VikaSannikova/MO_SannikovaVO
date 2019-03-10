@@ -11,6 +11,7 @@ public class PiyavskiMethod implements Algorithm {
     ArrayList<Interval> intervals = new ArrayList<Interval>();
     ArrayList<Double> characteristics = new ArrayList<Double>();
     ArrayList<Double> lengths = new ArrayList<Double>();
+    double minValue;
     Expression function;
     double m;
 
@@ -21,6 +22,8 @@ public class PiyavskiMethod implements Algorithm {
         characteristics.add(0.5*m*(intervals.get(0).getRight()-intervals.get(0).getLeft())- //ошибка гдето здесь
                 (function(intervals.get(0).getRight())+function(intervals.get(0).getLeft()))/2);
         lengths.add(interval.getLength());
+        Interval tmp =new Interval(function(interval.getLeft()),function(interval.getRight()));
+        minValue = tmp.min();
     }
 
     public double function(double x) {
@@ -88,10 +91,22 @@ public class PiyavskiMethod implements Algorithm {
         }
     }
 
+    public double getMinValue() {
+        return minValue;
+    }
+
     public void makeTwoIntervals(int index) {
         double point = 0.5*(intervals.get(index).getRight()+intervals.get(index).getLeft())-
                 (function(intervals.get(index).getRight())-function(intervals.get(index).getLeft()))/(2*m);
+        if(point<intervals.get(index).getLeft()||point>intervals.get(index).getRight()){
+            point = intervals.get(index).getMiddle();
+        }
         Interval first = new Interval(intervals.get(index).getLeft(), point);
+
+        Interval tmp = new Interval(minValue, function(point));
+        minValue = tmp.min();
+
+
         Interval second = new Interval(first.getRight(), intervals.get(index).getRight());
         intervals.get(index).setRange(first.getLeft(), first.getRight());
         intervals.add(second);

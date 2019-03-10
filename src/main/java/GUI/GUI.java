@@ -126,7 +126,7 @@ public class GUI {
                 double left = Double.parseDouble(aTextField.getText());
                 double right = Double.parseDouble(bTextField.getText());
                 XYSeries base = new XYSeries("Функция");
-                for(double i = left; i < right; i+=0.1){
+                for(double i = left; i < right; i+=0.01){
                     base.add(i, formula.f(i));
                 }
                 dataset.addSeries(base);
@@ -147,8 +147,8 @@ public class GUI {
                 double left = Double.parseDouble(aTextField.getText());
                 double right = Double.parseDouble(bTextField.getText());
                 Interval interval = new Interval(left,right);
-                SerialScanAlgorithm intervals = new SerialScanAlgorithm(interval);
-                //ArrayList<Double> points = new ArrayList<Double>();
+                Expression expression = new ExpressionBuilder(function.getText()).variables("x").build();
+                SerialScanAlgorithm intervals = new SerialScanAlgorithm(interval, expression);
                 int iters = 0;
                 double accur = 0;
                 int iterCount = 0;
@@ -167,13 +167,13 @@ public class GUI {
                     }
                     System.out.print("Для точности " + comboBox2.getSelectedItem());
                 }
-
-               for(int i = 0; i<intervals.size();i++){
-                    serialPoints.add((double)intervals.get(i).getLeft(),0.1);
-               }
-               serialPoints.add((double)intervals.get(intervals.size()-1).getRight(), 0.1);
-               datasetX.addSeries(serialPoints);
+                for(int i = 0; i<intervals.size();i++){
+                     serialPoints.add((double)intervals.get(i).getLeft(),0.1);
+                }
+                serialPoints.add((double)intervals.get(intervals.size()-1).getRight(), 0.1);
+                datasetX.addSeries(serialPoints);
                 System.out.println(" число сделанных итераций в методе последовательного сканирования: "+iterCount);
+                System.out.println( "Минимальное значение функции: " + intervals.getMinValue());
             }
         });
 
@@ -210,6 +210,7 @@ public class GUI {
                 piyavskiPoints.add((double)intervals.get(intervals.size()-1).getRight(), 0.0);
                 datasetX.addSeries(piyavskiPoints);
                 System.out.println(" число сделанных итераций в методе Пиявского: "+iterCount);
+                System.out.println( "Минимальное значение функции: " + intervals.getMinValue());
             }
         });
 
@@ -247,6 +248,7 @@ public class GUI {
                 stronginPoints.add((double)intervals.get(intervals.size()-1).getRight(), -0.1);
                 datasetX.addSeries(stronginPoints);
                 System.out.println(" число сделанных итераций в методе Стронгина: "+iterCount);
+                System.out.println( "Минимальное значение функции: " + intervals.getMinValue());
             }
         });
 

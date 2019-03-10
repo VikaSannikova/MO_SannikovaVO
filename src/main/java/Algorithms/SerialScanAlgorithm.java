@@ -11,19 +11,34 @@ public class SerialScanAlgorithm implements Algorithm {
     ArrayList<Interval> intervals = new ArrayList<Interval>();
     ArrayList<Double> characteristics = new ArrayList<Double>();
     ArrayList<Double> lengths = new ArrayList<Double>();
+    double minValue;
+    Expression function;
 
-    public SerialScanAlgorithm(Interval interval) {
+    public SerialScanAlgorithm(Interval interval, Expression expression) {
+        setFunction(expression);
         intervals.add(interval);
         characteristics.add(interval.getLength());
         lengths.add(interval.getLength());
+
+        Interval tmp = new Interval(function(interval.getLeft()), function(interval.getRight()));
+        minValue = tmp.min();
+
     }
 
     public double function(double x) {
-        return 0;
+        try{
+            return function.setVariable("x",x).evaluate();
+        }catch (Throwable cause){
+            if(cause instanceof ArithmeticException && "Division by zero!".equals(cause.getMessage()))
+                return Double.POSITIVE_INFINITY;
+            else{
+                return Double.NaN;
+            }
+        }
     }
 
     public void setFunction(Expression function) {
-
+        this.function = function;
     }
 
     public Interval get(int index){
@@ -64,9 +79,18 @@ public class SerialScanAlgorithm implements Algorithm {
 
     }
 
+    public double getMinValue() {
+        return minValue;
+    }
+
     public void makeTwoIntervals (int index){
         Interval first = new Interval(intervals.get(index).getLeft(), intervals.get(index).getMiddle());
         Interval second = new Interval(first.getRight(), intervals.get(index).getRight());
+
+        Interval tmp = new Interval(minValue, function(intervals.get(index).getMiddle()));
+        minValue = tmp.min();
+
+
         intervals.get(index).setRange(first.getLeft(), first.getRight());
         intervals.add(second);
         sort();
